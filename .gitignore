@@ -483,3 +483,5 @@ $RECYCLE.BIN/
 
 # DB
 *.db
+# Local ASP.NET Core settings with secrets
+appsettings.Local.json

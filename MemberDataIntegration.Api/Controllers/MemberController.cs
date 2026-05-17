@@ -1,7 +1,7 @@
-using MemberDataIntegration.Api.Data;
 using MemberDataIntegration.Api.Models;
+using MemberDataIntegration.Api.Models.Dtos;
+using MemberDataIntegration.Api.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace MemberDataIntegration.Api.Controllers;
 
@@ -9,18 +9,34 @@ namespace MemberDataIntegration.Api.Controllers;
 [Route("members")]
 public class MemberController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly MemberService _service;
 
-    public MemberController(AppDbContext context)
+    public MemberController(MemberService service)
     {
-        _context = context;
+        _service = service;
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Member>>> GetMembers()
+    public async Task<ActionResult<List<SourceMemberDto>>> GetMembers()
     {
-        var members = await _context.Members.ToListAsync();
+        var members = await _service.GetAllMembersAsync();
 
         return Ok(members);
+    }
+
+    [HttpGet("db")]
+    public async Task<ActionResult<List<Member>>> GetMembersFromDatabase()
+    {
+        var members = await _service.GetMembersFromDatabaseAsync();
+
+        return Ok(members);
+    }
+
+    [HttpPost("import")]
+    public async Task<ActionResult<int>> ImportMembers()
+    {
+        var importedCount = await _service.ImportMembersAsync();
+
+        return Ok(importedCount);
     }
 }
