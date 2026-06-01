@@ -10,8 +10,10 @@ public class Member
     [EmailAddress]
     public string Email { get; set; } = null!;
 
-    public string? FirstName { get; set; }
-    public string? LastName { get; set; }
+    public string? MemberPressName { get; set; }
+    public string? MailchimpName { get; set; }
+    public string? AwardForceName { get; set; }
+
     public string? Phone { get; set; }
 
     public bool IsMemberPress { get; set; }

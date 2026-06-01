@@ -9,4 +9,11 @@ public class AppDbContext : DbContext
         : base(options) { }
 
     public DbSet<Member> Members { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Member>()
+            .HasIndex(member => member.Email)
+            .IsUnique();
+    }
 }

@@ -292,6 +292,8 @@ FakesAssemblies/
 # Node.js Tools for Visual Studio
 .ntvs_analysis.dat
 node_modules/
+.next/
+out/
 
 # Visual Studio 6 build log
 *.plg
@@ -483,5 +485,7 @@ $RECYCLE.BIN/
 
 # DB
 *.db
+*.db-shm
+*.db-wal
 # Local ASP.NET Core settings with secrets
 appsettings.Local.json

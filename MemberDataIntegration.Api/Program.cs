@@ -1,3 +1,4 @@
+using System.Net;
 using MemberDataIntegration.Api.Clients;
 using MemberDataIntegration.Api.Data;
 using MemberDataIntegration.Api.Services;
@@ -13,7 +14,23 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // IMemberPress
-builder.Services.AddHttpClient<IMemberSourceClient, MemberPressClient>();
+builder.Services
+    .AddHttpClient<IMemberSourceClient, MemberPressClient>()
+    .ConfigurePrimaryHttpMessageHandler(() =>
+    {
+        var proxyUrl = builder.Configuration["MemberPress:ProxyUrl"];
+
+        if (string.IsNullOrWhiteSpace(proxyUrl))
+        {
+            return new HttpClientHandler();
+        }
+
+        return new HttpClientHandler
+        {
+            Proxy = new WebProxy(proxyUrl),
+            UseProxy = true,
+        };
+    });
 
 // Services
 builder.Services.AddScoped<MemberService>();

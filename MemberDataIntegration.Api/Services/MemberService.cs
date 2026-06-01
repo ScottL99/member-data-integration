@@ -22,6 +22,16 @@ public class MemberService
         return await _client.GetMembersAsync();
     }
 
+    public async Task<MemberPressTestResultDto> TestMemberPressMeAsync()
+    {
+        return await _client.TestMeAsync();
+    }
+
+    public async Task<MemberPressTestResultDto> TestMemberPressMembersAsync()
+    {
+        return await _client.TestMembersAsync();
+    }
+
     public async Task<List<Member>> GetMembersFromDatabaseAsync()
     {
         return await _dbContext.Members.ToListAsync();
@@ -42,22 +52,45 @@ public class MemberService
                 var member = new Member
                 {
                     Email = sourceMember.Email,
-                    FirstName = sourceMember.FirstName,
-                    LastName = sourceMember.LastName,
                     Phone = sourceMember.Phone,
-                    IsMemberPress = sourceMember.Source == "MemberPress",
                 };
+
+                ApplySourceData(member, sourceMember);
 
                 _dbContext.Members.Add(member);
             }
-            else if (sourceMember.Source == "MemberPress")
+            else
             {
-                existingMember.IsMemberPress = true;
+                ApplySourceData(existingMember, sourceMember);
             }
         }
 
         await _dbContext.SaveChangesAsync();
 
         return sourceMembers.Count;
+    }
+
+    private static void ApplySourceData(Member member, SourceMemberDto sourceMember)
+    {
+        if (!string.IsNullOrWhiteSpace(sourceMember.Phone))
+        {
+            member.Phone = sourceMember.Phone;
+        }
+
+        if (sourceMember.Source == "MemberPress")
+        {
+            member.IsMemberPress = true;
+            member.MemberPressName = sourceMember.Name;
+        }
+        else if (sourceMember.Source == "Mailchimp")
+        {
+            member.IsMailchimp = true;
+            member.MailchimpName = sourceMember.Name;
+        }
+        else if (sourceMember.Source == "AwardForce")
+        {
+            member.IsAwardForce = true;
+            member.AwardForceName = sourceMember.Name;
+        }
     }
 }

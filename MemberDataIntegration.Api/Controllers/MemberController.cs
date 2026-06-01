@@ -24,6 +24,22 @@ public class MemberController : ControllerBase
         return Ok(members);
     }
 
+    [HttpGet("memberpress/me")]
+    public async Task<ActionResult<MemberPressTestResultDto>> TestMemberPressMe()
+    {
+        var result = await _service.TestMemberPressMeAsync();
+
+        return Ok(result);
+    }
+
+    [HttpGet("memberpress/members")]
+    public async Task<ActionResult<MemberPressTestResultDto>> TestMemberPressMembers()
+    {
+        var result = await _service.TestMemberPressMembersAsync();
+
+        return Ok(result);
+    }
+
     [HttpGet("db")]
     public async Task<ActionResult<List<Member>>> GetMembersFromDatabase()
     {
